@@ -3,7 +3,7 @@ local M = {}
 function M.setup()
 	local ok, ts = pcall(require, "nvim-treesitter")
 	if not ok then
-		vim.notify("nvim-treesitter no está disponible", vim.log.levels.WARN)
+		vim.notify("nvim-treesitter is not available.", vim.log.levels.WARN)
 		return
 	end
 

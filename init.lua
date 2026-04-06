@@ -14,7 +14,7 @@ local function enable_lsp_if_executable(name, cmd)
 	end
 
 	vim.schedule(function()
-		vim.notify(string.format("LSP '%s' no habilitado: falta el binario '%s'", name, cmd), vim.log.levels.WARN)
+		vim.notify(string.format("LSP '%s' not enabled: requires the binary -> '%s'", name, cmd), vim.log.levels.WARN)
 	end)
 end
 

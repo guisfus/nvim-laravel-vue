@@ -43,6 +43,11 @@ vim.pack.add({
 	gh("akinsho/bufferline.nvim"),
 	gh("lukas-reineke/indent-blankline.nvim"),
 	gh("ellisonleao/gruvbox.nvim"),
+
+	-- Laravel
+	gh("MunifTanjim/nui.nvim"),
+	gh("nvim-lua/plenary.nvim"),
+	gh("adibhanna/laravel.nvim"),
 })
 
 vim.cmd.colorscheme("gruvbox")

@@ -48,6 +48,7 @@ function M.setup()
 
 		-- Source for autocompletion
 		sources = cmp.config.sources({
+			{ name = "laravel" },
 			{ name = "nvim_lsp" },
 			{ name = "luasnip" },
 			{ name = "path" },

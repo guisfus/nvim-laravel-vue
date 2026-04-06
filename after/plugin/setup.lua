@@ -66,3 +66,7 @@ end)
 safe_setup("config.trouble", function(config)
 	config.setup()
 end)
+
+safe_setup("config.laravel", function(config)
+	config.setup()
+end)
