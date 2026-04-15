@@ -52,6 +52,16 @@ Use `main` if you want the leanest possible starting point.
 
 Use `laravel-extended` if you want a richer Laravel workflow out of the box.
 
+Internally, this branch is organized around small workflow modules under `lua/config/workflows/`.
+
+### Workflow modules
+
+- `core` = shared editor, UI, completion, and baseline LSP behavior
+- `frontend` = TypeScript, Vue, ESLint, Tailwind, and Prettier for frontend buffers
+- `laravel` = `laravel.nvim`, Blade-aware behavior, and `pint` for Laravel projects
+
+The idea is simple: the branch keeps those workflows available, but workflow-specific setup is only activated when the current project or buffer matches it.
+
 ## Who this is for
 
 This repo is a good fit if you want:
@@ -102,6 +112,16 @@ And Laravel-aware navigation/completion for common patterns such as:
 - `config('...')`
 - `__('...')`
 - `Inertia::render('...')`
+
+## Branch strategy
+
+If you keep `main` and `laravel-extended` in parallel, the cleanest approach now is:
+
+- keep shared editor behavior in `core`
+- keep branch-specific behavior in `lua/config/workflows/*`
+- avoid forking `init.lua`, `lua/plugins.lua`, `lua/config/filetypes.lua`, and `lua/config/conform.lua` unless the architecture itself changes
+
+That keeps branch diffs small and makes merges between branches much easier.
 
 ## Quick start
 
@@ -276,6 +296,10 @@ The config first tries to resolve Vue tooling from the project tree and then fal
 
 If a required binary is missing, that server is skipped instead of hard-failing at startup.
 
+Warnings for missing binaries are deferred until you open a matching filetype, so the branch does not complain about unrelated frontend tools during startup.
+
+Workflow-specific setup is also gated by the current project when Neovim starts: frontend setup only matters in frontend roots, and Laravel formatting logic only matters in Laravel roots.
+
 ### Laravel / PHP
 
 PHP formatting uses `pint`, preferably from the Laravel project itself:
@@ -347,9 +371,14 @@ If you want to adjust the Laravel layer in this branch, check:
 │   │   ├── conform.lua
 │   │   ├── filetypes.lua
 │   │   ├── keymaps.lua
+<<<<<<< HEAD
 │   │   ├── laravel.lua
+=======
+│   │   ├── lsp/
+>>>>>>> 7cacf8d (refactor: modularize workflows and defer LSP activation)
 │   │   ├── nvimtree.lua
 │   │   ├── options.lua
+│   │   ├── workflows/
 │   │   ├── treesitter.lua
 │   │   └── trouble.lua
 │   └── plugins.lua
@@ -363,6 +392,9 @@ If you want to adjust the Laravel layer in this branch, check:
 - `lua/plugins.lua` → plugin declaration
 - `after/plugin/setup.lua` → plugin setup after plugins are available
 - `lua/config/*` → modular editor and plugin configuration
+- `lua/config/workflows/*` → per-workflow plugin and LSP registration
+- `lua/config/lsp/*` → shared LSP activation and root helpers
+- `lua/config/filetypes.lua` and `lua/config/conform.lua` → aggregate workflow-specific behavior
 - `after/lsp/*` → one file per LSP server
 - `lua/config/laravel.lua` → Laravel-specific branch layer
 - `docs/architecture.md` → internal design notes and extension guide
