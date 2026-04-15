@@ -10,6 +10,12 @@ local function safe_setup(module, callback)
 	callback(loaded)
 end
 
+local function safe_run_config(module)
+	safe_setup(module, function(config)
+		config.setup()
+	end)
+end
+
 -- Editing / UX
 safe_setup("which-key", function(which_key)
 	which_key.setup()
@@ -43,26 +49,8 @@ safe_setup("fzf-lua", function(fzf)
 end)
 
 -- Modular configurations
-safe_setup("config.conform", function(config)
-	config.setup()
-end)
-
-safe_setup("config.treesitter", function(config)
-	config.setup()
-end)
-
-safe_setup("config.cmp", function(config)
-	config.setup()
-end)
-
-safe_setup("config.nvimtree", function(config)
-	config.setup()
-end)
-
-safe_setup("config.bufferline", function(config)
-	config.setup()
-end)
-
-safe_setup("config.trouble", function(config)
-	config.setup()
+require("config.workflows").each_active({ path = vim.uv.cwd() }, function(workflow)
+	for _, module in ipairs(workflow.plugin_configs()) do
+		safe_run_config(module)
+	end
 end)

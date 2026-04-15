@@ -11,17 +11,5 @@ return {
 		"vue",
 		"blade",
 	},
-	root_markers = {
-		"tailwind.config.js",
-		"tailwind.config.cjs",
-		"tailwind.config.mjs",
-		"tailwind.config.ts",
-		"postcss.config.js",
-		"postcss.config.cjs",
-		"postcss.config.mjs",
-		"postcss.config.ts",
-		"package.json",
-		"composer.json",
-		".git",
-	},
+	root_dir = require("config.lsp.tailwind_root"),
 }

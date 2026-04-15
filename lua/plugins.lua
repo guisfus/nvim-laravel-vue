@@ -2,47 +2,26 @@ local gh = function(repo)
 	return "https://github.com/" .. repo
 end
 
-vim.pack.add({
-	-- Treesitter
-	{ src = gh("nvim-treesitter/nvim-treesitter"), version = "main" },
+local plugins = {}
+local seen = {}
 
-	-- Dependencies / base utilities
-	gh("nvim-lua/plenary.nvim"),
-	gh("nvim-tree/nvim-web-devicons"),
-	gh("nvim-mini/mini.icons"),
+-- Each workflow contributes plugin specs; this file only merges them.
+require("config.workflows").each(function(workflow)
+	for _, spec in ipairs(workflow.plugins()) do
+		local key = spec.repo or spec.src
+		if not seen[key] then
+			seen[key] = true
 
-	-- LSP / formatting / lint
-	gh("neovim/nvim-lspconfig"),
-	gh("stevearc/conform.nvim"),
+			if spec.repo then
+				plugins[#plugins + 1] = spec.version and { src = gh(spec.repo), version = spec.version }
+					or gh(spec.repo)
+			else
+				plugins[#plugins + 1] = spec
+			end
+		end
+	end
+end)
 
-	-- Completion / snippets
-	gh("hrsh7th/nvim-cmp"),
-	gh("hrsh7th/cmp-nvim-lsp"),
-	gh("hrsh7th/cmp-buffer"),
-	gh("hrsh7th/cmp-path"),
-	gh("L3MON4D3/LuaSnip"),
-	gh("saadparwaiz1/cmp_luasnip"),
-	gh("rafamadriz/friendly-snippets"),
-
-	-- Navigation / search
-	gh("ibhagwan/fzf-lua"),
-	gh("nvim-tree/nvim-tree.lua"),
-
-	-- Git / diagnostics
-	gh("lewis6991/gitsigns.nvim"),
-	gh("folke/trouble.nvim"),
-
-	-- Editing
-	gh("folke/which-key.nvim"),
-	gh("numToStr/Comment.nvim"),
-	gh("windwp/nvim-autopairs"),
-	gh("RRethy/vim-illuminate"),
-
-	-- UI
-	gh("nvim-lualine/lualine.nvim"),
-	gh("akinsho/bufferline.nvim"),
-	gh("lukas-reineke/indent-blankline.nvim"),
-	gh("ellisonleao/gruvbox.nvim"),
-})
+vim.pack.add(plugins)
 
 vim.cmd.colorscheme("gruvbox")
